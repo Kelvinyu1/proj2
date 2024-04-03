@@ -1,15 +1,14 @@
 #include "myHeap.hpp"
 #include <cstdint>
 
-// default constructor: nothing needed, min and max heaps just initialized
-myHeap::myHeap() {}
-
-// not sure if we need a destructor since we aren't using pointers, keep just in
-// case
-myHeap::~myHeap() {}
 
 // param: vector<int> instructions. called as a pointer
-void myHeap::heapMedian(const std::vector<int> *instructions) {
+void heapMedian(const std::vector<int> *instructions) {
+  
+  // max heap contains the integers <= median
+  std::priority_queue<int> my_max_heap_;
+  // min heap contains integers > median
+  std::priority_queue<int, std::vector<int>, std::greater<int>> my_min_heap_;
   // iterator: starts from the beginning of the vector to the end.
   for (auto it = instructions->begin(); it != instructions->end(); ++it) {
     /* if empty and not -1, we add. mainly for inserting the first element from
