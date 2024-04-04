@@ -1,6 +1,6 @@
 #ifndef MYAVLTREE_HPP
 #define MYAVLTREE_HPP
-
+#include <chrono>
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -17,7 +17,6 @@ struct AvlNode {
   AvlNode(int &&ele, AvlNode *lt, AvlNode *rt, int h = 0)
       : element{std::move(ele)}, left{lt}, right{rt}, height{h} {}
 };
-
 
 int height(AvlNode *t);
 void insert(const int &x, AvlNode *&t);

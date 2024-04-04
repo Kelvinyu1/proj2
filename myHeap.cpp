@@ -5,6 +5,8 @@
 // param: vector<int> instructions. called as a pointer
 void heapMedian(const std::vector<int> *instructions) {
   
+  const auto t1_start = std::chrono::steady_clock::now();
+  std::vector<int> median;
   // max heap contains the integers <= median
   std::priority_queue<int> my_max_heap_;
   // min heap contains integers > median
@@ -23,6 +25,7 @@ void heapMedian(const std::vector<int> *instructions) {
     there is an inbalance. remove the top of the min heap and move it to the max
     heap make sure to pop so that we can */
     else if (*it == -1) {
+      median.push_back(my_max_heap_.top());
       my_max_heap_.pop();
       if (my_min_heap_.size() > my_max_heap_.size()) {
         auto heapy = my_min_heap_.top();
@@ -51,5 +54,13 @@ void heapMedian(const std::vector<int> *instructions) {
         }
       }
     }
+  }
+
+  const auto t1_end = std::chrono::steady_clock::now();
+  int t1 = std::chrono::duration <double, std::micro> (t1_end - t1_start).count();
+
+  std::cout << "Time to insert and pop medians for Heap: " << t1 << " microseconds"<< std::endl;
+  for (auto c : median){
+    std::cout << c << " ";
   }
 }

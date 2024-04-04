@@ -14,7 +14,7 @@ int height(AvlNode *t) { return t == nullptr ? -1 : t->height; }
 void insert(const int &x, AvlNode *&t) {
   if (t == nullptr)
     t = new AvlNode{x, nullptr, nullptr};
-  else if (x < t->element)
+  else if (x <= t->element)
     insert(x, t->left);
   else if (t->element < x)
     insert(x, t->right);
@@ -117,6 +117,7 @@ void remove(const int &x, AvlNode *&t) {
     AvlNode *oldNode = t;
     t = (t->left != nullptr) ? t->left : t->right;
     delete oldNode;
+    oldNode = nullptr;
   }
   balance(t);
 }
@@ -130,52 +131,95 @@ AvlNode *findMin(AvlNode *t) {
 }
 
 AvlNode *findMax(AvlNode *t) {
-  if(t == nullptr)
+  if (t == nullptr)
     return nullptr;
-  if(t->right == nullptr)
+  if (t->right == nullptr)
     return t;
   return findMax(t->right);
 }
 
-void treeMedian(const std::vector<int> * instructions){
+void deletePostOrder(AvlNode *&t) {
+    if (t == nullptr) return; // Base case: empty subtree
+
+    // Recursively delete left subtree
+    deletePostOrder(t->left);
+
+    // Recursively delete right subtree
+    deletePostOrder(t->right);
+
+    // Delete the current node after its children have been deleted
+    delete t;
+    t = nullptr; // Set the pointer to nullptr to avoid dangling pointer
+}
+
+void printInOrder(const AvlNode *t) {
+  if (t == nullptr) {
+    return; // Base case: if the node is null, do nothing
+  }
+
+  printInOrder(t->left);          // Recursively print the left subtree
+  std::cout << t->element << " "; // Print the current node's value
+  printInOrder(t->right);         // Recursively print the right subtree
+}
+
+void treeMedian(const std::vector<int> *instructions) {
+  const auto t1_start = std::chrono::steady_clock::now();
+  std::vector<int> median;
   AvlNode *max_tree = nullptr;
   AvlNode *min_tree = nullptr;
   int countmax = 0;
   int countmin = 0;
-  for(auto it = instructions->begin(); it != instructions->end(); ++it){
-    if(max_tree == nullptr && *it != 1){
+  for (auto it = instructions->begin(); it != instructions->end(); ++it) {
+    if (max_tree == nullptr && *it != 1) {
       insert(*it, max_tree);
       countmax += 1;
-    }
-    if(*it == -1){
+    } else if (*it == -1) {
+      // printInOrder(max_tree);
+      // std::cout << std::endl;
+      median.push_back(findMax(max_tree)->element);
       remove(findMax(max_tree)->element, max_tree);
       countmax -= 1;
-    }
-    else{
-      if (*it < findMax(max_tree)->element){
+      if (countmin > countmax) {
+        // std::cout<< "Howdy";
+        int copy = findMin(min_tree)->element;
+        remove(copy, min_tree);
+        insert(copy, max_tree);
+        countmin -= 1;
+        countmax += 1;
+      }
+      // printInOrder(max_tree);
+      // std::cout << std::endl;
+    } else {
+      if (*it <= findMax(max_tree)->element) {
         insert(*it, max_tree);
         countmax += 1;
-        if(countmax > countmin + 1){
-          AvlNode *copy = findMax(max_tree);
-          remove(findMax(max_tree)->element, max_tree);
+        if (countmax > countmin + 1) {
+          int copy = findMax(max_tree)->element;
+          remove(copy, max_tree);
           countmax -= 1;
-          insert(copy->element, min_tree);
+          insert(copy, min_tree);
           countmin += 1;
         }
-      }
-      else if(*it > findMax(max_tree)->element){
+      } else if (*it > findMax(max_tree)->element) {
         insert(*it, min_tree);
         countmin += 1;
-        if(countmin > countmax){
-          AvlNode *copy = findMin(min_tree);
-          remove(findMin(min_tree)->element, min_tree);
+        if (countmin > countmax) {
+          int copy = findMin(min_tree)->element;
+          remove(copy, min_tree);
           countmin -= 1;
-          insert(copy->element, max_tree);
+          insert(copy, max_tree);
           countmax += 1;
         }
       }
     }
-    
-    
   }
-} 
+  const auto t1_end = std::chrono::steady_clock::now();
+  int t1 = std::chrono::duration<double, std::micro>(t1_end - t1_start).count();
+
+  std::cout << "Time to insert and pop medians for AvlTree: " << t1 <<" microseconds" << std::endl;
+  for (auto c : median) {
+    std::cout << c << " ";
+  }
+  deletePostOrder(max_tree);
+  deletePostOrder(min_tree);
+}
