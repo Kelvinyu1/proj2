@@ -1,4 +1,4 @@
-#include "myAvlTree.hpp"
+#include "myAVLtree.hpp"
 
 /**
  * Return the height of node t or -1 if nullptr.
