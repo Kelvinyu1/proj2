@@ -1,4 +1,4 @@
-#include "myAvLTree.hpp"
+#include "myAvlTree.hpp"
 #include "myHeap.hpp"
 #include "myList.hpp"
 #include "myVector.hpp"

@@ -1,4 +1,4 @@
-#include "myAvLTree.hpp"
+#include "myAvlTree.hpp"
 
 /**
  * Return the height of node t or -1 if nullptr.
@@ -216,7 +216,7 @@ void treeMedian(const std::vector<int> *instructions) {
   const auto t1_end = std::chrono::steady_clock::now();
   int t1 = std::chrono::duration<double, std::micro>(t1_end - t1_start).count();
 
-  std::cout << "Time to insert and pop medians for AvlTree: " << t1 <<" microseconds" << std::endl;
+  // std::cout << "Time to insert and pop medians for AvlTree: " << t1 <<" microseconds" << std::endl;
   for (auto c : median) {
     std::cout << c << " ";
   }
