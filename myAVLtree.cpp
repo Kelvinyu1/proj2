@@ -162,6 +162,11 @@ void printInOrder(const AvlNode *t) {
   printInOrder(t->right);         // Recursively print the right subtree
 }
 
+/*post: inserts to either min or max tree, 
+  pops when -1, 
+  checks when trees are imbalanced in size, 
+  returns majors
+*/
 void treeMedian(const std::vector<int> *instructions) {
   const auto t1_start = std::chrono::steady_clock::now();
   std::vector<int> median;
